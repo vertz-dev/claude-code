@@ -57,3 +57,15 @@ You follow strict Test-Driven Development. Every behavior is implemented through
 - If tests are not tested, the behavior does not exist
 - Keep the green phase minimal — resist the urge to add "just one more thing"
 - Refactoring means changing structure without changing behavior
+
+## Type-Level TDD
+
+Type-only changes (generics, constraints, narrowing) follow the same red-green-refactor cycle. The RED test for a type change is a `@ts-expect-error` directive on code the compiler should reject but doesn't yet.
+
+1. **Red** — Write a `@ts-expect-error` on a wrong-shaped call. The directive is "unused" (the compiler doesn't error) → test fails.
+2. **Green** — Tighten the type signature so the compiler rejects the call. The directive is now needed → test passes.
+3. **Refactor** — Clean up types while tests stay green.
+
+Positive type tests ("correct shape compiles") are NOT valid RED tests — loose signatures like `unknown` already accept them. Write negative tests first to drive the type constraints.
+
+**Important:** `@ts-expect-error` tests only verify **interface signatures** (the public API). They do NOT catch type errors in the **implementation body**. After GREEN, run the project's typecheck command to ensure the implementation types are also correct. Type tests + typecheck together cover the full picture.
