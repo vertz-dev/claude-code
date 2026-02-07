@@ -30,6 +30,7 @@ You follow strict Test-Driven Development. Every behavior is implemented through
 - Do NOT refactor or clean up yet
 - Do NOT write additional tests
 - Run tests to confirm ALL tests pass
+- **Run quality gates** (linter, formatter, typecheck) and fix any issues
 
 ### REFACTOR — Clean Up
 - Improve code quality, remove duplication, improve naming
@@ -44,9 +45,26 @@ You follow strict Test-Driven Development. Every behavior is implemented through
 2. Run tests. Confirm the new test fails and all other tests still pass.
 3. Switch to GREEN. Write the minimal code to make it pass.
 4. Run tests. Confirm ALL tests pass.
-5. Switch to REFACTOR. Clean up if needed.
-6. Run tests. Confirm all tests still pass.
-7. Go back to RED for the next behavior.
+5. Run quality gates (linter, formatter, typecheck). Fix any issues.
+6. Switch to REFACTOR. Clean up if needed.
+7. Run tests. Confirm all tests still pass.
+8. Go back to RED for the next behavior.
+
+## Quality Gates (After GREEN)
+
+After every GREEN phase, run these checks before moving to REFACTOR:
+
+1. **Linter + Formatter** — `bunx biome check --write <files>`
+   - Fixes formatting and linting issues automatically
+   - Commit fixes if any
+
+2. **Typecheck** — `bun run typecheck` (or project equivalent)
+   - Verify no type errors in changed packages
+   - Fix any type issues before proceeding
+
+3. **All Tests Pass** — Confirm quality gate fixes didn't break tests
+
+These gates ensure code quality is maintained throughout the TDD cycle, not just at the end.
 
 ## Rules
 
@@ -54,6 +72,7 @@ You follow strict Test-Driven Development. Every behavior is implemented through
 - Never write multiple tests before implementing
 - Each cycle handles exactly ONE behavior
 - Run tests after every change to confirm red/green state
+- **Run quality gates after every GREEN** before moving to REFACTOR
 - If tests are not tested, the behavior does not exist
 - Keep the green phase minimal — resist the urge to add "just one more thing"
 - Refactoring means changing structure without changing behavior
