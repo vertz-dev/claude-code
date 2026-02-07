@@ -46,6 +46,13 @@ Do NOT add vitest aliases, tsconfig paths, or bundler aliases that redirect `@sc
 - Missing exports are caught immediately
 - Package boundaries are enforced, not just documented
 
+### Verify built types after changes
+When adding or modifying exports, always rebuild the package and verify the generated `.d.ts` files contain the correct types. Build tools using `isolatedDeclarations` mode (e.g., bunup) silently drop functions without explicit return type annotations from the DTS output. This means:
+- Always add explicit return types on exported functions and factory methods
+- After building, spot-check the `.d.ts` output for the changed exports
+- If a type shows up as `{}` or `unknown` in the DTS, it means the source is missing a return type annotation
+- Cross-package tests that use built `dist/` (not source aliases) will catch this — a missing type in the DTS causes compile errors in consuming packages
+
 ### When something is missing from the public API
 If you need something that isn't exported:
 1. Check if it belongs in the public API — if yes, export it from the package's index
